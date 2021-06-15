@@ -53,13 +53,13 @@ public class ParamConfig {
         return PUBLIC_KEYS_DIRECTORY;
     }
 
-    @Value("${ADM_PUBLIC_KEY_DIRECTORY}")
-    private String ADM_PUBLIC_KEY_DIRECTORY;
-    public void setADM_PUBLIC_KEY_DIRECTORY(String ADM_PUBLIC_KEY_DIRECTORY) {
-        this.ADM_PUBLIC_KEY_DIRECTORY = ADM_PUBLIC_KEY_DIRECTORY;
+    @Value("${ADM_PUBLIC_KEYS_DIRECTORY}")
+    private String ADM_PUBLIC_KEYS_DIRECTORY;
+    public void setADM_PUBLIC_KEYS_DIRECTORY(String ADM_PUBLIC_KEYS_DIRECTORY) {
+        this.ADM_PUBLIC_KEYS_DIRECTORY = ADM_PUBLIC_KEYS_DIRECTORY;
     }
-    public String getADM_PUBLIC_KEY_DIRECTORY() {
-        return ADM_PUBLIC_KEY_DIRECTORY;
+    public String getADM_PUBLIC_KEYS_DIRECTORY() {
+        return ADM_PUBLIC_KEYS_DIRECTORY;
     }
 
     @Value("${SIGN_TYPE}")
