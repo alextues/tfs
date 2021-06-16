@@ -27,11 +27,11 @@ public class SignChecker {
     private ParamConfig paramConfig;
 
     // Подготовить криптографическую библиотеку
-    public void prepareCryptoLibrary() {
+    public void prepareCryptoLibrary() throws Exception {
         String osName = System.getProperty("os.name");
         LOG.info(String.format("Операционная система: %s", osName));
 
-        cryptoTool = new ICBicryptTools();
+        cryptoTool = new ICBicryptTools("./dir/system/");
         try {
             cryptoTool.installFiles(paramConfig.getBICRYPT_SPECIFIC_LIBRARY());
             // Системные библиотеки
@@ -41,6 +41,12 @@ public class SignChecker {
                 System.loadLibrary("cryptox509_64");
                 System.loadLibrary("bicr5_64");
                 System.loadLibrary("Grn64");
+            }
+            else if(osName.contains("Linux")) {
+                System.loadLibrary("cms80_64");
+                System.loadLibrary("asn1pars_64");
+                System.loadLibrary("cryptox509_64");
+                System.loadLibrary("bicr5_64");
             }
             // Базы открытых ключей
             pkb = new PublicKeyBase(paramConfig.getPUBLIC_KEYS());
