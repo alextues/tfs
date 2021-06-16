@@ -44,22 +44,22 @@ public class ParamConfig {
         return BICRYPT_JAR_LIBRARY;
     }
 
-    @Value("${PUBLIC_KEYS_DIRECTORY}")
-    private String PUBLIC_KEYS_DIRECTORY;
-    public void setPUBLIC_KEYS_DIRECTORY(String PUBLIC_KEYS_DIRECTORY) {
-        this.PUBLIC_KEYS_DIRECTORY = PUBLIC_KEYS_DIRECTORY;
+    @Value("${PUBLIC_KEYS}")
+    private String PUBLIC_KEYS;
+    public void setPUBLIC_KEYS(String PUBLIC_KEYS) {
+        this.PUBLIC_KEYS = PUBLIC_KEYS;
     }
-    public String getPUBLIC_KEYS_DIRECTORY() {
-        return PUBLIC_KEYS_DIRECTORY;
+    public String getPUBLIC_KEYS() {
+        return PUBLIC_KEYS;
     }
 
-    @Value("${ADM_PUBLIC_KEYS_DIRECTORY}")
-    private String ADM_PUBLIC_KEYS_DIRECTORY;
-    public void setADM_PUBLIC_KEYS_DIRECTORY(String ADM_PUBLIC_KEYS_DIRECTORY) {
-        this.ADM_PUBLIC_KEYS_DIRECTORY = ADM_PUBLIC_KEYS_DIRECTORY;
+    @Value("${ADM_PUBLIC_KEYS}")
+    private String ADM_PUBLIC_KEYS;
+    public void setADM_PUBLIC_KEYS(String ADM_PUBLIC_KEYS) {
+        this.ADM_PUBLIC_KEYS = ADM_PUBLIC_KEYS;
     }
-    public String getADM_PUBLIC_KEYS_DIRECTORY() {
-        return ADM_PUBLIC_KEYS_DIRECTORY;
+    public String getADM_PUBLIC_KEYS() {
+        return ADM_PUBLIC_KEYS;
     }
 
     @Value("${SIGN_TYPE}")

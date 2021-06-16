@@ -23,7 +23,7 @@ public class TfsCryptoChecker implements CommandLineRunner {
 
     @Override
     public void run(String[] args) throws Exception {
-        LOG.info("Starting and read properties");
+        LOG.info("Чтение и загрузка свойств");
         signChecker.prepareCryptoLibrary();
         signChecker.signChecker();
     }

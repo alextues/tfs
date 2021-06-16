@@ -19,18 +19,32 @@ import java.util.stream.Collectors;
 @Component
 public class SignChecker {
     private static final Logger LOG = LoggerFactory.getLogger(ParamConfig.class);
+
     private ICBicryptTools cryptoTool;
-    private String osName = System.getProperty("os.name");
+    private PublicKeyBase pkb, admPkb;
 
     @Autowired
     private ParamConfig paramConfig;
 
     // Подготовить криптографическую библиотеку
     public void prepareCryptoLibrary() {
-        LOG.info(String.format("Environment: %s", osName));
+        String osName = System.getProperty("os.name");
+        LOG.info(String.format("Операционная система: %s", osName));
+
         cryptoTool = new ICBicryptTools();
         try {
             cryptoTool.installFiles(paramConfig.getBICRYPT_SPECIFIC_LIBRARY());
+            // Системные библиотеки
+            if(osName.contains("Windows")) {
+                System.loadLibrary("cms80_64");
+                System.loadLibrary("asn1pars_64");
+                System.loadLibrary("cryptox509_64");
+                System.loadLibrary("bicr5_64");
+                System.loadLibrary("Grn64");
+            }
+            // Базы открытых ключей
+            pkb = new PublicKeyBase(paramConfig.getPUBLIC_KEYS());
+            admPkb = new PublicKeyBase(paramConfig.getADM_PUBLIC_KEYS());
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -72,25 +86,16 @@ public class SignChecker {
             BicryptSign bicryptSign = bicryptSignParser.getBicryptSign();
             LOG.info(String.format("Идентификатор ЭЦП Bicrypt: %s", bicryptSign.getBicryptIdentifier()));
 
-            // Системные библиотеки
-            if(osName.contains("Windows")) {
-                System.loadLibrary("cms80_64");
-                System.loadLibrary("asn1pars_64");
-                System.loadLibrary("cryptox509_64");
-                System.loadLibrary("bicr5_64");
-                System.loadLibrary("Grn64");
-            }
-
             // Проверка ЭЦП по публичным ключам
-            PublicKeyBase pkb = new PublicKeyBase(paramConfig.getPUBLIC_KEYS_DIRECTORY());
-            PublicKeyBase admPkb = new PublicKeyBase(paramConfig.getADM_PUBLIC_KEYS_DIRECTORY());
+//            PublicKeyBase pkb = new PublicKeyBase(paramConfig.getPUBLIC_KEYS_DIRECTORY());
+//            PublicKeyBase admPkb = new PublicKeyBase(paramConfig.getADM_PUBLIC_KEYS_DIRECTORY());
 
-            boolean result = cryptoTool.check(data, bicryptSign, pkb, admPkb);
+            boolean result = cryptoTool.check(data, bicryptSign, this.pkb, this.admPkb);
             LOG.info("Результат проверки ЭЦП: " + result);
             LOG.info("-----------------------------------------------------------");
 
-            pkb.close();
-            admPkb.close();
+//            pkb.close();
+//            admPkb.close();
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -118,48 +123,5 @@ public class SignChecker {
         }
 
         return result;
-    }
-
-
-
-
-
-
-
-
-
-
-    private void check(String fileName, boolean deleteSign) {
-        LOG.info("Проверка ЭЦП...");
-        try {
-//            BicryptSignParser bicryptSignParser = new BicryptSignParser(data);
-//            BicryptSign bicryptSign = bicryptSignParser.getBicryptSign();
-//            LOG.info(String.format("Идентификатор ЭЦП Bicrypt: %s", bicryptSign.getBicryptIdentifier()));
-
-
-            // Системные библиотеки
-            System.loadLibrary("cms80_64");
-            System.loadLibrary("asn1pars_64");
-            System.loadLibrary("cryptox509_64");
-            System.loadLibrary("bicr5_64");
-            System.loadLibrary("Grn64");
-
-            // Проверка ЭЦП по публичным ключам
-            PublicKeyBase pkb = new PublicKeyBase(paramConfig.getPUBLIC_KEYS_DIRECTORY() + "testsbtj_d[1].015");
-            PublicKeyBase admPkb = new PublicKeyBase(paramConfig.getADM_PUBLIC_KEYS_DIRECTORY() + "00CA00CA[1].017");
-
-            List<CheckBicryptResult> checks = cryptoTool.check(fileName, deleteSign, pkb, admPkb);
-            for (CheckBicryptResult check : checks) {
-                System.out.println("Sign Number '" + check.getSignNumber() + "' is " +
-                        (check.isOk() ? "Good" : "BAD!!!"));
-            }
-//            boolean result = cryptoTool.check(data, bicryptSign, pkb, admPkb);
-//            System.out.println(">>>>>>>>>>>> " + result);
-            pkb.close();
-            admPkb.close();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 }
