@@ -67,8 +67,7 @@ public class SignChecker {
             for(int i = 0; i < filesInFolder.size(); i++) {
                 String fname = filesInFolder.get(i).getName();
                 if(fname.endsWith("sig")) {
-                    checkSign(cryptoTool, readFile(fname));
-//                    check(paramConfig.getTFS_INCOME_DIRECTORY() + filesInFolder.get(i).getName(), false);
+                    checkSign(readFile(fname));
                     // TODO: перенос файлов в рабочий каталог WORK_DIRECTORY (для дальнейшей обработки)
                 }
             }
@@ -79,23 +78,16 @@ public class SignChecker {
     }
 
     // Проверка ЭЦП
-    private void checkSign(ICBicryptTools cryptoTool, byte[] data) {
+    private void checkSign(byte[] data) {
         LOG.info("Проверка ЭЦП...");
         try {
             BicryptSignParser bicryptSignParser = new BicryptSignParser(data);
             BicryptSign bicryptSign = bicryptSignParser.getBicryptSign();
             LOG.info(String.format("Идентификатор ЭЦП Bicrypt: %s", bicryptSign.getBicryptIdentifier()));
 
-            // Проверка ЭЦП по публичным ключам
-//            PublicKeyBase pkb = new PublicKeyBase(paramConfig.getPUBLIC_KEYS_DIRECTORY());
-//            PublicKeyBase admPkb = new PublicKeyBase(paramConfig.getADM_PUBLIC_KEYS_DIRECTORY());
-
             boolean result = cryptoTool.check(data, bicryptSign, this.pkb, this.admPkb);
             LOG.info("Результат проверки ЭЦП: " + result);
             LOG.info("-----------------------------------------------------------");
-
-//            pkb.close();
-//            admPkb.close();
         }
         catch (Exception ex) {
             ex.printStackTrace();
